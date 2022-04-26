@@ -10,28 +10,28 @@ const bull = (
     </Box>
 );
 
-const SearchCard = () => {
+const SearchCard = (props) => {
     return (
         <>
             <Grid item xs={3} >
                 <Card sx={{ border: '1px solid #bdbdbd', backgroundColor: '#fafafa', boxShadow: 'none' }}>
                     <CardContent>
                         <Typography color="text.secondary" gutterBottom>
-                            BITS Pilani Hyderabad {bull} CS F211
+                            {props.college} {bull} {props.courseId}
                         </Typography>
                         <Typography variant="h5" component="div" sx={{ mb: 1.5 }}>
-                            Normalization Notes
+                            {props.title}
                         </Typography>
                         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            Uploaded By Mansvi Bhatia
+                            Uploaded By {props.uploadedBy}
                         </Typography>
                         <Rating
                             sx={{ mb: 1.5 }}
-                            value={3}
+                            value={props.rating}
                             readOnly
                         />
                         <Typography variant="h5" color='Highlight'>
-                            ₹80
+                            ₹{props.cost}
                         </Typography>
                     </CardContent>
                     <CardActions>

@@ -1,8 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useFetchData from '../hooks/use-fetch-data';
 import { authActions } from '../src/store';
 import SignUpForm from '../components/SignUp/SignUpForm';
 import { useDispatch, useSelector } from 'react-redux';
+import Header from '../components/UI/Header';
+import Router from 'next/router';
 
 const SignUp = () => {
 
@@ -20,29 +22,8 @@ const SignUp = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        console.log(token);
-        if (confirmPasswordInputRef.current.value !== passwordInputRef.current.value) {
-            setPasswordMatch(false);
-        }
-        else {
-            setPasswordMatch(true);
-            fetchData(
-                'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAIYdOdtdRO9KZvWL7ZKs2OEYFmmadg-ko',
-                'POST',
-                {
-                    email: emailInputRef.current.value,
-                    password: passwordInputRef.current.value,
-                    returnSecureToken: true
-                },
-            ).then(() => {
-                if (!!apiData) {
-                    dispatch(authActions.setToken(apiData.idToken));
-                    navigate('/', { replace: true });
-                }
-            })
-
-
-        }
+        dispatch(authActions.setLogin(true));
+        Router.push('/');
     }
 
     const props = {
@@ -56,8 +37,17 @@ const SignUp = () => {
         serverError,
     }
 
+    useEffect(() => {
+        if (JSON.parse(localStorage.getItem("isLoggedIn"))) {
+            Router.push('/')
+        }
+    });
+
     return (
+        <>
+        <Header/>
         <SignUpForm {...props} />
+        </>
     )
 }
 
