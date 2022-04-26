@@ -8,12 +8,16 @@ import Header from '../components/UI/Header';
 import { authActions } from '../src/store';
 import { useSelector, useDispatch } from 'react-redux';
 import Container from '../components/UI/Container';
+import { useEffect, useState } from 'react';
+import useFetchData from '../hooks/use-fetch-data';
 
-const index = (props) => {
 
-  const token = useSelector(state => state.token);
+const index = () => {
+
   const dispatch = useDispatch();
-  dispatch(authActions.setToken(true));
+  const isLoggedIn = useSelector(state => state.isLoggedIn);
+  const firstName = useSelector(state => state.firstName);
+  const { isLoading, apiData, fetchData } = useFetchData();
 
   const BeforeLogin = <Grid container pl={10} sx={{
     position: 'absolute',
@@ -33,45 +37,34 @@ const index = (props) => {
     </Grid>
   </Grid>
 
-  const AfterLogin = <> <Grid container sx={{
+  const AfterLogin = <> <Grid container pl={10} sx={{
     borderRadius: 2,
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)'
   }}>
     <Grid item xs={7}>
       <Typography variant='h3' fontWeight='300' color='primary' mb={1} >
-        Welcome @nameetrajore<Emoji symbol='❤️' />
+        Welcome {firstName}<Emoji symbol='❤️' />
       </Typography>
     </Grid>
     <Grid item xs={6}>
       <Typography variant='h6' fontWeight='400' color='gray' align='justify'>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam laboriosam velit distinctio tempora, ut quia quasi, sunt nisi dolore alias error ullam voluptatibus quo! Debitis dolorem atque obcaecati perspiciatis delectus.<Emoji symbol='👇' />
       </Typography>
+      <Grid item xs={6} pt={3}>
+        <LoadingButton fullWidth disableElevation color='inherit' variant='contained' to={{ pathname: '/search' }} component={NextLinkComposed} size='large' type='submit' sx={{ height: '3.2rem' }}>Click here to Search</LoadingButton>
+      </Grid>
     </Grid>
   </Grid>
-    <Grid container spacing={3} py={3} mt={1} sx={{ width: '25%', minWidth: '25rem' }}>
-      <Grid item xs={12} >
-        <TextField variant="outlined" label="College" fullWidth />
-      </Grid>
-      <Grid item xs={12} >
-        <TextField variant="outlined" label="Course Name" fullWidth />
-      </Grid>
-      <Grid item xs={12} >
-        <TextField variant="outlined" label="Year" fullWidth />
-      </Grid>
-
-      <Grid item xs={12} >
-        <TextField variant="outlined" label="Professor" fullWidth />
-      </Grid>
-      <Grid item xs={12} >
-        <LoadingButton fullWidth disableElevation variant='contained' to={{ pathname: '/search' }} component={NextLinkComposed} size='large' type='submit' sx={{ height: '3.2rem' }}>Search</LoadingButton>
-      </Grid>
-    </Grid>
     <Fab sx={{
       padding: '2rem', borderRadius: '50rem', position: 'fixed', right: '-2rem',
       bottom: '2rem',
       transform: 'translate(-50%, -50%)',
       boxShadow: '0',
     }} size='large' color='primary' variant="extended"
-      to={{pathname:'/upload'}}
+      to={{ pathname: '/upload' }}
       component={NextLinkComposed}
     >
       <AddIcon sx={{ mr: 1 }} />
@@ -79,12 +72,16 @@ const index = (props) => {
     </Fab>
   </>
 
+  useEffect(()=>{ 
+    dispatch(authActions.setLogin(JSON.parse(localStorage.getItem("isLoggedIn"))));
+  },[]);
+
   return (
     <>
-    <Header/>
-    <Container>
-    {!!token ? AfterLogin : BeforeLogin}
-    </Container>
+      <Header />
+      <Container>
+        {!!isLoggedIn ? AfterLogin : BeforeLogin}
+      </Container>
     </>);
 }
 

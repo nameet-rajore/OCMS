@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { authActions } from "../../src/store";
 import { NextLinkComposed } from '../../src/Link';
+import Router from "next/router";
 
 function ElevationScroll(props) {
     const { children } = props;
@@ -20,11 +21,13 @@ function ElevationScroll(props) {
 
 const Header = () => {
 
-    const token = useSelector(state => state.token);
+    const isLoggedIn = useSelector(state => state.isLoggedIn);
     const dispatch = useDispatch();
 
     const logoutHandler = () => {
-        dispatch(authActions.setToken(''));
+        dispatch(authActions.setLogin(false));
+        Router.push('/');
+        localStorage.setItem('isLoggedIn', false);
     }
 
     const LoginButton = <Button
@@ -72,10 +75,10 @@ const Header = () => {
                                 OCMS
                             </Link>
                         </Typography>
-                        {!token && LoginButton}
-                        {!token && SignUpButton}
-                        {!!token && CartButton}
-                        {!!token && LogoutButton}
+                        {!isLoggedIn && LoginButton}
+                        {!isLoggedIn && SignUpButton}
+                        {!!isLoggedIn && CartButton}
+                        {!!isLoggedIn && LogoutButton}
                     </Toolbar>
                 </AppBar>
             </ElevationScroll>
