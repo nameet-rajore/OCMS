@@ -1,5 +1,7 @@
 import React from 'react'
 import { Grid, Card, CardContent, Typography, CardActions, Button, Rating, Box, AppBar, Toolbar } from '@mui/material'
+import { LoadingButton } from '@mui/lab';
+import { useSelector, useDispatch } from 'react-redux';
 
 const bull = (
     <Box
@@ -10,7 +12,13 @@ const bull = (
     </Box>
 );
 
+
 const CartCard = (props) => {
+    const cartDeleteHandler = ()=>{
+        const userId = useSelector(state=>state.userId);
+        const response = fetch(`/api/cart?userId=${userId}&materialId=${props.materialId}`, {method:'DELETE', headers:{"Content-Type": "application/json"}});
+    }
+    
     return (
         <>
             <Grid item xs={3} >
@@ -35,7 +43,7 @@ const CartCard = (props) => {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button color='error' >Remove from Cart</Button>
+                        <LoadingButton color='error' onClick={cartDeleteHandler} >Remove from Cart</LoadingButton>
                     </CardActions>
                 </Card>
             </Grid>

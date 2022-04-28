@@ -16,8 +16,7 @@ const index = () => {
 
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.isLoggedIn);
-  const firstName = useSelector(state => state.firstName);
-  const { isLoading, apiData, fetchData } = useFetchData();
+  const userName = useSelector(state => state.userName);
 
   const BeforeLogin = <Grid container pl={10} sx={{
     position: 'absolute',
@@ -46,7 +45,7 @@ const index = () => {
   }}>
     <Grid item xs={7}>
       <Typography variant='h3' fontWeight='300' color='primary' mb={1} >
-        Welcome {firstName}<Emoji symbol='❤️' />
+        Welcome {userName}<Emoji symbol='❤️' />
       </Typography>
     </Grid>
     <Grid item xs={6}>
@@ -71,11 +70,6 @@ const index = () => {
       Upload Notes
     </Fab>
   </>
-
-  useEffect(()=>{ 
-    dispatch(authActions.setLogin(JSON.parse(localStorage.getItem("isLoggedIn"))));
-  },[]);
-
   return (
     <>
       <Header />

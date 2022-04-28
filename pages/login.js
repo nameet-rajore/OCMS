@@ -9,6 +9,8 @@ import Router from 'next/router';
 import { authActions } from '../src/store';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { LoadingButton } from '@mui/lab';
+
 const Login = () => {
 
     const dispatch = useDispatch();
@@ -16,28 +18,32 @@ const Login = () => {
 
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
-
-    const submitHandler = (e) => {
-        e.preventDefault();
-        //send get request
-        // if true
-        dispatch(authActions.setLogin(true));
-        Router.push('/');
-        localStorage.setItem('isLoggedIn', true);
-
-        //else
-        //setEmailError(true);
-        //setPasswordError(true);
-    }
+    const [isLoading, setIsLoading] = useState(false);
 
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
 
-    useEffect(() => {
-        if (JSON.parse(localStorage.getItem("isLoggedIn"))) {
-            Router.push('/')
+    const submitHandler = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        const response = await fetch(`/api/auth?emailID=${emailInputRef.current.value}&password=${passwordInputRef.current.value}`, {method: 'GET', headers: { "Content-Type": "application/json" }});
+        const data = await response.json();
+        console.log(data);
+        if(data.message==='Successful Login')
+        {
+        dispatch(authActions.setUserName(data.userName));
+        dispatch(authActions.setUserId(data.userId));
+        dispatch(authActions.setLogin(true));
+        setEmailError(false);
+        setPasswordError(false);
+        Router.push('/');
         }
-    });
+        else{
+            setEmailError(true);
+            setPasswordError(true);
+        }
+        setIsLoading(false);
+    }
 
     return (
         <>
@@ -55,13 +61,13 @@ const Login = () => {
                     </Grid>
 
                     <Grid item xs={12} >
-                        <TextField variant="outlined" label="Email ID" fullWidth inputRef={emailInputRef} />
+                        <TextField variant="outlined" label="Email ID" fullWidth inputRef={emailInputRef} error={emailError}/>
                     </Grid>
                     <Grid item xs={12} p={0}>
-                        <TextField variant="outlined" label="Password" type="password" fullWidth inputRef={passwordInputRef} />
+                        <TextField variant="outlined" label="Password" type="password" fullWidth inputRef={passwordInputRef} error={passwordError}/>
                     </Grid>
                     <Grid item xs={12}>
-                        <Button fullWidth variant='contained' size='large' type='submit' sx={{ height: '3.2rem' }}>Login</Button>
+                        <LoadingButton fullWidth variant='contained' size='large' type='submit' loading={isLoading} sx={{ height: '3.2rem' }}>Login</LoadingButton>
                     </Grid>
                     <Box
                         sx={{

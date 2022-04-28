@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Grid, Card, CardContent, Typography, CardActions, Button, Rating, Box } from '@mui/material'
+import { LoadingButton } from '@mui/lab';
+import { useSelector, useDispatch } from 'react-redux';
 
 const bull = (
     <Box
@@ -10,7 +12,19 @@ const bull = (
     </Box>
 );
 
+
 const SearchCard = (props) => {
+
+    const [disableButton, setDisableButton] = useState(false);
+    const userId = useSelector(state=>state.userId);
+
+    const cartAddHandler = async ()=>{
+        const response = await fetch(`/api/cart/insert?userId=${userId}&materialId=${props.materialId}`, {method:'PUT', headers:{"Content-Type": "application/json"}});
+        if(response.ok){
+            setDisableButton(true);
+        }
+    }
+
     return (
         <>
             <Grid item xs={3} >
@@ -35,7 +49,7 @@ const SearchCard = (props) => {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button >Add to Cart</Button>
+                        <LoadingButton onClick={cartAddHandler} disabled={disableButton}>Add to Cart</LoadingButton>
                     </CardActions>
                 </Card>
             </Grid>

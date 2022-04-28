@@ -14,10 +14,10 @@ const Cart = () => {
 
     const dispatch = useDispatch();
     const isLoggedIn = useSelector(state => state.isLoggedIn);
-
-    const [cartItems, setCartItems] = useState([]);
-    const { isLoading:cartIsLoading, apiData, fetchData:fetchCart } = useFetchData();
-    const {isLoading:orderIsLoading, fetchData:fetchOrder} = useFetchData();
+    const cart = useSelector(state=>state.cart);
+    const userId = useSelector(state=>state.userId);
+    const [cartIsLoading, setCartIsLoading] = useState(false);
+    const [orderIsLoading, setOrderIsLoading] = useState(false);
 
     const orderHandler =()=>{
         fetchOrder('/api/order', 'POST', {}).then(()=>{
@@ -27,14 +27,16 @@ const Cart = () => {
     }
 
     useEffect(() => {
-        if (JSON.parse(localStorage.getItem("isLoggedIn"))) { dispatch(authActions.setLogin(JSON.parse(true))); }
-        else {
-            dispatch(authActions.setLogin(JSON.parse(false)))
-            Router.push('/');
+        const fn = async ()=>{
+        setCartIsLoading(true);
+        console.log(userId);
+        const response = await fetch(`/api/cart/get?userId=${userId}`, {method:'GET'});
+        const data = await response.json();
+        dispatch(authActions.setCart(data));
+        console.log(cart);
+        setCartIsLoading(false);
         }
-
-        fetchCart('/api/cart', 'GET');
-        setCartItems(apiData);
+        fn();
     }, []);
 
     return (
@@ -51,8 +53,7 @@ const Cart = () => {
                         </Grid>
                     </Grid>
                     <Grid container spacing={3} py={3} >
-                        {!cartIsLoading&&cartItems.map(item=><CartCard key={Math.random()} college={item.college} courseId={item.courseId} uploadedBy={item.uploadedBy} title={item.title} cost={item.cost} rating={item.rating}/>)}
-                        <CartCard college='BITS Pilani Hyderabad' courseId='CS F111' uploadedBy='Mansvi Bhatia' title='Normalization Notes' cost={80} rating={Math.random()*5}/>
+                        {!cartIsLoading&&cart.map(item=><CartCard key={Math.random()} college={item.College_name} courseId={item.Course_id} uploadedBy={item.User_name} title={item.Title} cost={item.Cost} rating={Math.random()*5}/>)}
                     </Grid>
                 </Box>
             </Container>

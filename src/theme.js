@@ -1,9 +1,6 @@
 import { createTheme } from '@mui/material';
 
 export const themeOptions = createTheme({
-    palette: {
-        type: 'dark',
-    },
     overrides: {
         MuiAppBar: {
             colorInherit: {
@@ -16,7 +13,7 @@ export const themeOptions = createTheme({
         borderRadius: 10,
     },
     typography: {
-        fontFamily: 'Montserrat',
+        fontFamily: 'Work Sans'
     },
     spacing: 8,
 });
