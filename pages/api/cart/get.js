@@ -15,12 +15,14 @@ async function openDB (){
 
 async function get(req, res){
     const db= await openDB();
-    const cart = await db.all((`Select College.College_name, Course.Course_id, Uploaded_Material.Title,Uploaded_Material.User_id,Uploaded_Material.Cost FROM College,Course,Uploaded_Material,Cart
-    WHERE
-    Cart.User_id IN( Select user.User_id from user where user.User_id='${req.query.userId}' ) AND
-    Course.Cu_id IN(select Uploaded_Material.Cu_id from Uploaded_Material where Uploaded_Material.Material_id IN(select In_Cart.Material_id From In_Cart where In_Cart.Material_id IN(select Cart.Material_id From Cart where Cart.User_id='${req.query.userId}') ))AND
-    Uploaded_Material.Material_id IN(select In_Cart.Material_id From In_Cart where In_Cart.Material_id IN(select Cart.Material_id From Cart where Cart.User_id='${req.query.userId}') )
-    `));
+    const cart = await db.all((`Select College.College_name, Course.Course_id,Course.Course_name,user.User_name,Uploaded_Material.Material_id ,Uploaded_Material.Title,Uploaded_Material.User_id,Uploaded_Material.Cost FROM College
+    INNER JOIN Offered_by ON College.College_id=Offered_by.College_id
+    INNER JOIN Course ON Offered_by.Cu_id=Course.Cu_id
+    INNER JOIN Uploaded_Material ON Course.Cu_id=Uploaded_Material.Cu_id
+    INNER JOIN In_Cart ON Uploaded_Material.Material_id=In_cart.Material_id
+    INNER JOIN Cart ON (Cart.Material_id=In_Cart.Material_id AND Cart.User_id='${req.query.userId}')
+    INNER JOIN user On user.User_id=Uploaded_Material.User_id;`))
+    ;
     console.log(cart);
     res.status(200).json(cart);
 }

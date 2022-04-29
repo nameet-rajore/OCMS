@@ -58,7 +58,7 @@ const Header = () => {
         marginRight: '1rem'
     }} color="primary" to={{ pathname: '/cart' }}
         component={NextLinkComposed}>
-        <Badge badgeContent={3} color='error'>
+        <Badge badgeContent={0} color='error'>
             <ShoppingCartIcon fontSize="large" />
         </Badge>
     </IconButton>

@@ -76,7 +76,7 @@ const Search = () => {
                             <TextField variant="outlined" size='small' label="Course Name" fullWidth inputRef={courseInputRef} />
                         </Grid>
                         <Grid item xs={2.75} >
-                            <TextField variant="outlined" size='small' label="Year" fullWidth inputRef={yearInputRef} />
+                            <TextField variant="outlined" size='small' label="Year" type='number' fullWidth inputRef={yearInputRef} />
                         </Grid>
 
                         <Grid item xs={2.75} >

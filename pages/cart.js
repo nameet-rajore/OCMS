@@ -33,12 +33,13 @@ const Cart = () => {
         const response = await fetch(`/api/cart/get?userId=${userId}`, {method:'GET'});
         const data = await response.json();
         dispatch(authActions.setCart(data));
-        console.log(cart);
+        console.log(data);
         setCartIsLoading(false);
         }
         fn();
     }, []);
 
+    console.log();
     return (
         <>
             <Header />
@@ -53,7 +54,8 @@ const Cart = () => {
                         </Grid>
                     </Grid>
                     <Grid container spacing={3} py={3} >
-                        {!cartIsLoading&&cart.map(item=><CartCard key={Math.random()} college={item.College_name} courseId={item.Course_id} uploadedBy={item.User_name} title={item.Title} cost={item.Cost} rating={Math.random()*5}/>)}
+                        {!cartIsLoading&& !!cart.length && cart.map(item=><CartCard key={Math.random()} college={item.College_name} courseId={item.Course_id} uploadedBy={item.User_name} title={item.Title} cost={item.Cost} materialId={item.Material_ID} rating={Math.random()*5}/>)}
+                        {!cartIsLoading&& !cart.length && <Typography variant='h5' sx={{m:3}} color='GrayText' > Your cart is empty!</Typography>}
                     </Grid>
                 </Box>
             </Container>
@@ -64,7 +66,7 @@ const Cart = () => {
                             Total:
                         </Typography>
                         <Typography color="primary" variant='h4' mr={3} fontWeight='700'>
-                            ₹80
+                        ₹{cart.map((item)=>item.Cost).reduce((prev, curr)=> curr+prev, 0)}
                         </Typography>
                     </Box>
                     <LoadingButton size="large" variant="contained" disableElevation onClick={orderHandler} loading={orderIsLoading}>Place Order</LoadingButton>

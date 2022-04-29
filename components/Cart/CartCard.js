@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Grid, Card, CardContent, Typography, CardActions, Button, Rating, Box, AppBar, Toolbar } from '@mui/material'
 import { LoadingButton } from '@mui/lab';
 import { useSelector, useDispatch } from 'react-redux';
+import { authActions } from '../../src/store';
 
 const bull = (
     <Box
@@ -14,9 +15,18 @@ const bull = (
 
 
 const CartCard = (props) => {
-    const cartDeleteHandler = ()=>{
-        const userId = useSelector(state=>state.userId);
-        const response = fetch(`/api/cart?userId=${userId}&materialId=${props.materialId}`, {method:'DELETE', headers:{"Content-Type": "application/json"}});
+    const [disableButton, setDisableButton] = useState(false);
+    const userId = useSelector(state=>state.userId);
+    const dispatch = useDispatch();
+
+    const cartDeleteHandler = async ()=>{
+        const response = fetch(`/api/cart/del?userId=${userId}&materialId=${props.materialId}`, {method:'DELETE', headers:{"Content-Type": "application/json"}});
+        if(response.ok){
+            setDisableButton(true);
+        }
+        const res = await fetch(`/api/cart/get?userId=${userId}`, {method:'GET'});
+        const data = await res.json();
+        dispatch(authActions.setCart(data));
     }
     
     return (
@@ -43,7 +53,7 @@ const CartCard = (props) => {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <LoadingButton color='error' onClick={cartDeleteHandler} >Remove from Cart</LoadingButton>
+                        <LoadingButton color='error' onClick={cartDeleteHandler} disabled={disableButton}>Remove from Cart</LoadingButton>
                     </CardActions>
                 </Card>
             </Grid>

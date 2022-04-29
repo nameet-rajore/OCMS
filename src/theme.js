@@ -13,7 +13,7 @@ export const themeOptions = createTheme({
         borderRadius: 10,
     },
     typography: {
-        fontFamily: 'Work Sans'
+        fontFamily: 'Roboto'
     },
     spacing: 8,
 });

@@ -31,7 +31,11 @@ const index = () => {
     </Grid>
     <Grid item xs={6}>
       <Typography variant='h6' fontWeight='400' color='gray' align='justify'>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam laboriosam velit distinctio tempora, ut quia quasi, sunt nisi dolore alias error ullam voluptatibus quo! Debitis dolorem atque obcaecati perspiciatis delectus.
+      Online Course Management System (OCMS) is a project which aims at
+      developing a computerized system to maintain notes and drive links of
+      lectures recorded in online semesters to help students access study
+      material easily. This system helps students learn whichever subjects they
+      want from professors across three BITS campuses.
       </Typography>
     </Grid>
   </Grid>
@@ -50,7 +54,8 @@ const index = () => {
     </Grid>
     <Grid item xs={6}>
       <Typography variant='h6' fontWeight='400' color='gray' align='justify'>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam laboriosam velit distinctio tempora, ut quia quasi, sunt nisi dolore alias error ullam voluptatibus quo! Debitis dolorem atque obcaecati perspiciatis delectus.<Emoji symbol='👇' />
+      Search for notes based
+on course name, course ID, Professor name or/and College name.<Emoji symbol='👇' />
       </Typography>
       <Grid item xs={6} pt={3}>
         <LoadingButton fullWidth disableElevation color='inherit' variant='contained' to={{ pathname: '/search' }} component={NextLinkComposed} size='large' type='submit' sx={{ height: '3.2rem' }}>Click here to Search</LoadingButton>

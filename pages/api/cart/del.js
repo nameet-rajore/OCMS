@@ -13,11 +13,12 @@ async function openDB (){
    })
 }
 
-async function del (res, req){
+async function del (req, res){
     const db= await openDB();
-    const remove = await db.all((`DELETE from Cart where User_id='${req.query.userId}'`));
-    console.log(remove);
-    res.status(200).json({message:"Item Deleted"});
+    console.log(req.query);
+    const remove = await db.all((`
+    DELETE from Cart where User_id='${req.query.userId}' AND Material_id='${req.query.materialId}';`));
+    res.status(200).json(remove);
 }
 
 module.exports = del;

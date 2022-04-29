@@ -16,16 +16,19 @@ async function openDB (){
 async function search(req,res) {
    const db = await openDB();
    const material = await db.get((`
-   Select Uploaded_Material.Title,user.User_name,Uploaded_Material.Cost,Uploaded_Material.Material_Id,Course.Course_id,College.College_name From Uploaded_Material,Course,user,College
-Where
-College.College_name='${req.query.collegeName}' AND
-Uploaded_Material.Cu_id IN(select Course.Cu_id from Course where Course.Cu_id IN (Select Offered_by.Cu_id From Offered_by where Offered_by.College_id IN(Select College.College_id From College where College.College_name='${req.query.collegeName}'))) AND
-Uploaded_Material.Cu_id IN(select Course.Cu_id from Course where Course.Course_name='${req.query.courseName}' AND Course.Year=${req.query.year}) AND
-Course.Course_name='${req.query.courseName}' AND Course.Year=${req.query.year} AND
-Uploaded_Material.Cu_id IN(select Course.Cu_id from Course where Course.Prof_id in(select Professor.Prof_id from Professor where Professor.Prof_name='${req.query.professorName}' ))AND
-user.User_id IN(select Uploaded_Material.User_id from Uploaded_Material  where Uploaded_Material.Cu_id IN(select Course.Cu_id from Course where Course.Course_name='${req.query.courseName}'));
+   Select Uploaded_Material.Title,user.User_name,Uploaded_Material.Cost,Course.Course_id, Uploaded_Material.Material_Id, College.College_name From College
+INNER JOIN Professor On (College.College_id=Professor.College_id AND Professor.Prof_name='${req.query.professorName}' AND College.College_name='${req.query.collegeName}')
+INNER JOIN Course On (Professor.Prof_id=Course.Prof_id AND Course.Course_name='${req.query.courseName}' AND Course.Year=${req.query.year} )
+INNER JOIN Uploaded_Material ON Uploaded_Material.Cu_id=Course.Cu_id
+INNER JOIN user On Uploaded_Material.User_id=user.User_id
 `));
+if(!!{material}['material']){
 res.status(200).json({material}['material']);
+}
+else{
+   res.end(404);
+}
+
 }
 
 export default search;
